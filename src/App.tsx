@@ -473,6 +473,12 @@ export default function App() {
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
   const current = content[language];
   const selectedProject = selectedProjectIndex === null ? null : current.projects[selectedProjectIndex];
+  const emailAddress = 'sunxiaoyun333@gmail.com';
+  const emailSubject = language === 'zh' ? '来自个人简历网站的联系' : 'Hello from your resume website';
+  const emailBody = language === 'zh'
+    ? '你好，孙晓云：\n\n我从你的个人简历网站看到你的信息，想和你聊聊：\n\n'
+    : 'Hi Xiaoyun,\n\nI found your resume website and would like to talk about:\n\n';
+  const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddress)}&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
@@ -708,10 +714,12 @@ export default function App() {
             <GlassCard className="lg:col-span-2">
               <h3 className="mb-6 text-3xl font-black text-slate-900">{current.contact.heading}</h3>
               <p className="mb-8 text-lg font-bold leading-relaxed text-slate-500">{current.contact.body}</p>
-              <RippleButton onClick={() => { window.location.href = 'mailto:sunxiaoyun333@gmail.com'; }} className="bg-teal-500 text-white shadow-2xl shadow-teal-200">
+              <RippleButton onClick={() => { window.open(gmailComposeUrl, '_blank', 'noopener,noreferrer'); }} className="bg-teal-500 text-white shadow-2xl shadow-teal-200">
                 {current.contact.button}
               </RippleButton>
-              <p className="mt-5 font-bold tracking-wide text-slate-400">sunxiaoyun333@gmail.com</p>
+              <a href={gmailComposeUrl} target="_blank" rel="noreferrer" className="mt-5 block font-bold tracking-wide text-slate-400 transition-colors hover:text-teal-600">
+                {emailAddress}
+              </a>
             </GlassCard>
           </div>
         </section>
