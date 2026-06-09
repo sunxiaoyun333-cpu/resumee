@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
 import profilePhoto from './assets/profile-photo.png';
 import smilePhoto from './assets/smile-photo.png';
@@ -149,6 +149,38 @@ const RippleButton = ({ children, className = '', onClick }: { children: React.R
   </motion.button>
 );
 
+const MilkTeaHands = () => (
+  <svg viewBox="0 0 220 170" className="h-full w-full drop-shadow-xl" aria-hidden="true">
+    <motion.path
+      d="M39 113 C24 101, 18 83, 28 73 C38 63, 52 78, 64 94 L84 119 C68 126, 51 123, 39 113 Z"
+      fill="#F7C8A5"
+      stroke="#E7A77D"
+      strokeWidth="4"
+      animate={{ rotate: [-3, 3, -3] }}
+      style={{ originX: '40px', originY: '100px' }}
+      transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+    />
+    <motion.path
+      d="M181 113 C196 101, 202 83, 192 73 C182 63, 168 78, 156 94 L136 119 C152 126, 169 123, 181 113 Z"
+      fill="#F7C8A5"
+      stroke="#E7A77D"
+      strokeWidth="4"
+      animate={{ rotate: [3, -3, 3] }}
+      style={{ originX: '180px', originY: '100px' }}
+      transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+    />
+    <motion.g animate={{ y: [0, -6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
+      <path d="M84 50 H136 L128 132 H92 Z" fill="#F9D6A7" stroke="#B7793B" strokeWidth="5" />
+      <path d="M82 50 H138 L134 66 H86 Z" fill="#7DD3FC" stroke="#0EA5E9" strokeWidth="5" />
+      <path d="M94 34 C103 24, 112 18, 126 10" fill="none" stroke="#0F766E" strokeWidth="7" strokeLinecap="round" />
+      <circle cx="100" cy="105" r="5" fill="#8B5E34" />
+      <circle cx="116" cy="111" r="5" fill="#8B5E34" />
+      <circle cx="108" cy="122" r="5" fill="#8B5E34" />
+      <path d="M96 78 C106 84, 119 84, 130 78" fill="none" stroke="#B7793B" strokeWidth="4" strokeLinecap="round" />
+    </motion.g>
+  </svg>
+);
+
 const baziGallery = [
   { src: baziChartImage, alt: 'Bazi Agent chart confirmation screen' },
   { src: baziQuestionOneImage, alt: 'Bazi Agent validation question one' },
@@ -177,6 +209,228 @@ const menuGallery = [
   { src: menuResultInfoImage, alt: 'AI menu translation dish result screen' },
   { src: menuAllergenMarketingImage, alt: 'AI menu translation allergen and marketing screen' },
   { src: menuCopyOutputImage, alt: 'AI menu translation copy output screen' },
+];
+
+const viralgenZhSections: ProjectSection[] = [
+  {
+    title: '项目背景',
+    paragraphs: [
+      '在研究 TikTok 香氛赛道时，我发现大部分卖家面临的问题并不是不会写文案，而是不知道产品卖点是什么、用户为什么购买、不同国家用户关注什么，以及应该如何组织营销内容。',
+      '因此我开始思考，是否能够通过 AI 帮助卖家完成从产品分析到营销方案生成的完整流程。',
+    ],
+  },
+  {
+    title: '遇到的第一个问题：用户应该上传什么信息？',
+    paragraphs: [
+      '最开始我考虑过让用户上传产品图片、输入产品信息、输入产品配料或输入产品卖点。',
+      '但很快发现一个矛盾：输入越详细，结果越准确；输入越复杂，用户越容易放弃。',
+      '产品需要在准确性和使用门槛之间找到平衡。',
+    ],
+  },
+  {
+    title: '我的解决方案：用 1688 链接降低输入成本',
+    paragraphs: [
+      '我开始研究跨境卖家的真实工作流程，发现大部分中国卖家的产品源头都来自 1688。',
+      '于是我提出一个假设：如果用户直接上传产品链接，系统是否可以自动完成后续分析？这样既减少输入成本，又保留产品信息完整度。',
+    ],
+  },
+  {
+    title: '遇到的第二个问题：1688 信息获取失败',
+    paragraphs: [
+      '确定使用 1688 链接作为入口后，新的问题出现了。由于 1688 存在较强的反爬机制，无论是手机端还是 PC 端链接，都很难直接获取完整产品信息。',
+      '研究多个方案后，我最终引入开源 Skill 能力模块，通过 Skill 自动提取产品名称、产品卖点、产品规格、产品图片和产品描述，完成商品信息结构化。',
+    ],
+  },
+  {
+    title: '遇到的第三个问题：如何让不同国家输出不同营销策略？',
+    paragraphs: [
+      '产品卖点并不等于用户痛点。同一款香薰，美国用户可能关注减压、助眠、居家氛围，而其他国家用户可能关注礼品属性、空间除味和情绪价值。',
+      '如果直接让大模型生成，结果很容易不稳定。',
+      '我的解决方案是设计香氛行业 RAG 知识库，将用户痛点、购买动机、使用场景和营销角度结构化存储，生成时优先调用知识库，提高输出一致性和行业相关性。',
+    ],
+  },
+  {
+    title: '遇到的第四个问题：RAG 知识会过时',
+    paragraphs: [
+      '知识库虽然稳定，但市场变化很快。TikTok 热点、用户关注点、爆款产品都在持续变化。',
+      '我设计了双层知识体系：第一层 RAG 知识库负责稳定输出，第二层 Search API 负责实时搜索最新市场信息，实现长期知识与实时趋势的结合。',
+    ],
+  },
+  {
+    title: '遇到的第五个问题：国内产品信息不等于海外用户需求',
+    paragraphs: [
+      '即使获得了 1688 产品数据，依然存在一个问题：卖家视角不等于用户视角。1688 告诉我们产品是什么，却无法告诉我们用户为什么买。',
+      '因此我引入亚马逊同类产品评论，重点分析五星好评、高频关键词和用户反馈，提取真实购买原因，再反向生成卖点、营销角度和广告文案。',
+    ],
+  },
+  {
+    title: '遇到的第六个问题：如何生成专业的视频脚本？',
+    paragraphs: [
+      '我并不是导演，也不具备专业广告分镜能力。如果直接让模型生成，视频内容往往缺乏专业感。',
+      '与其自己从零设计，不如学习成熟方案。我研究 GitHub 上的视频生成 Agent 项目，分析其脚本结构、镜头设计、情绪节奏和分镜逻辑。',
+      '随后通过 Codex 拆解和重构，将适合营销场景的部分融入 ViralGen 的脚本生成模块。',
+    ],
+  },
+  {
+    title: '技术实现',
+    items: ['Python', 'Streamlit', 'Gemini', 'Tavily Search', 'RAG 知识库', '多模态图片识别', 'Skill 模块'],
+  },
+  {
+    title: '项目收获',
+    paragraphs: ['这个项目让我意识到：AI 产品最大的挑战并不是调用模型，而是如何把模糊需求拆解成一系列可验证的问题，然后逐个解决。'],
+  },
+];
+
+const baziZhSections: ProjectSection[] = [
+  {
+    title: '项目背景',
+    paragraphs: [
+      '测试多个大模型后我发现，对于同一个八字，GPT、DeepSeek、豆包等模型经常给出不同判断。',
+      '传统命理产品也存在两个问题：排盘不够准确，缺少验证机制。用户很难判断结果是否可信。',
+    ],
+  },
+  {
+    title: '我的思考：为什么不用主观问卷？',
+    paragraphs: [
+      '最开始我考虑过直接设计问卷，例如：你是否觉得自己性格外向？你是否容易冲动？你是否喜欢稳定？',
+      '但很快发现这些问题高度依赖用户主观判断。不同的人对于同一个问题可能会有完全不同的理解。',
+      '因此，主观问题等于可信度较低，也成为这个产品设计上的难点。',
+    ],
+  },
+  {
+    title: '我的解决方案：从性格判断转向人生事件验证',
+    paragraphs: [
+      '我开始思考：如果一个人的性格会受到主观认知影响，那么过去真实发生的人生事件是否更加可信？',
+      '最终我将验证机制从性格判断转向人生事件验证，设计流年锚点问答系统。',
+      '通过用户回顾过去重要年份，例如哪一年运势明显变好、哪一年工作出现变化、哪一年感情出现变化、哪一年发生重大转折，收集真实人生事件。',
+    ],
+  },
+  {
+    title: '为什么这样设计',
+    paragraphs: [
+      '相比“你是否性格外向”这样的主观问题，用户更容易确认 2022 年换工作、2023 年升职、2024 年搬家这类客观事实。',
+      '因此我希望利用“大运流年 + 真实事件”进行双重验证，通过关键年份的事件反馈，反向辅助判断喜忌。',
+    ],
+  },
+  {
+    title: '技术实现',
+    items: ['Python', 'FastAPI', '真太阳时换算', '四柱排盘', '中国城市经纬度数据库', '流年锚点问答'],
+  },
+  {
+    title: '我的收获',
+    paragraphs: [
+      '这个项目让我意识到，很多时候用户相信的不是算法，而是验证过程。',
+      '相比直接给出结论，让用户参与验证过程，往往更容易建立信任。产品价值不仅来自结果本身，也来自结果是如何被验证出来的。',
+    ],
+  },
+];
+
+const restaurantZhSections: ProjectSection[] = [
+  {
+    title: '项目背景',
+    paragraphs: [
+      '在美国外企 SaaS 工作期间，我发现公司官方账号增长速度较慢。虽然持续输出内容，但始终难以吸引目标用户关注。',
+      '于是我开始思考：如果我是美国华人餐厅老板，我真正愿意关注什么内容？而这些内容是否能够与公司业务建立联系？',
+    ],
+  },
+  {
+    title: '遇到的问题：用户真正关心什么？',
+    paragraphs: [
+      '最初的问题并不是如何制作视频，而是美国华人餐厅老板真正关心什么。',
+      '如果选题错误，即使制作再多内容也无法获得关注。因此我决定先研究用户，而不是直接生产内容。',
+    ],
+  },
+  {
+    title: '用户研究过程',
+    paragraphs: [
+      '我利用 Google Deep Research 和 Reddit API 收集美国华人餐厅老板的真实讨论内容，重点分析经营难题、成本压力、员工管理、餐厅租约、创业经验和市场变化。',
+      '随后利用 Grok、Perplexity、Claude 进行交叉验证，要求模型给出结论的同时提供具体信息来源，尽可能降低幻觉带来的影响。',
+    ],
+  },
+  {
+    title: '发现的规律',
+    paragraphs: [
+      '在大量内容分析后，我发现餐厅老板最关注的并不是营销技巧，而是如何开店、如何避坑、如何控制成本、如何签租约、如何经营餐厅。',
+      '这些内容天然具有传播性，同时又能够与公司的业务场景形成关联。',
+    ],
+  },
+  {
+    title: '第二个问题：如何降低内容生产成本？',
+    paragraphs: [
+      '确定选题方向后，新的问题出现了。我不希望真人出镜、复杂拍摄或大量剪辑，因为内容生产成本过高。',
+      '于是我开始研究 AI 内容生产工具，目标是建立一套低成本、可复制、可持续的内容生产流程。',
+    ],
+  },
+  {
+    title: '最终 SOP',
+    paragraphs: [
+      'Gemini 负责选题生成和内容初稿，Claude 负责信息验证、内容优化和逻辑调整，AI 视频工具负责自动生成视频并降低制作成本。',
+      '最终形成“选题研究 -> 内容验证 -> 视频生成”的自动化内容生产链路。',
+    ],
+  },
+  {
+    title: '项目结果',
+    items: ['1500+ 精准粉丝', '4400+ 点赞与收藏', '目标用户：美国华人餐饮创业群体'],
+  },
+  {
+    title: '我的收获',
+    paragraphs: [
+      '增长的核心并不是内容生产，而是理解用户。',
+      '很多时候，用户不会直接告诉你需求，但会通过点击、点赞、收藏、评论表达自己的兴趣和关注点。因此，内容增长本质上也是一种用户研究。',
+    ],
+  },
+];
+
+const menuZhSections: ProjectSection[] = [
+  {
+    title: '项目背景',
+    paragraphs: [
+      '在接触北美餐饮行业客户时，我发现许多华人餐厅老板不仅需要将菜单翻译成英文，还需要同时解决美国消费者能够理解的菜单表达、过敏原识别、社交媒体营销文案和菜品宣传标题。',
+      '这些工作通常依赖经验丰富的运营人员完成，因此我开始思考是否可以通过 AI 将这一流程自动化。',
+    ],
+  },
+  {
+    title: '遇到的第一个问题：什么样的翻译才算地道？',
+    paragraphs: [
+      '最开始我尝试直接使用大模型翻译菜单，但很快发现大模型能够完成翻译，却不一定能够保证翻译符合美国餐饮行业的实际表达习惯。',
+      '我认为真正优秀的菜单翻译不是字面意义上的中英文转换，而是在中国菜品文化和美国消费者理解习惯之间取得平衡。',
+    ],
+  },
+  {
+    title: '我的解决方案：权威知识 + 模型补充',
+    paragraphs: [
+      '调研过程中，我发现中国翻译专业机构整理过《中国菜标准翻译资料库》。它经过专业研究与长期实践验证，相比纯模型生成结果，更适合作为标准参考。',
+      '最终我将相关菜品翻译资料整理为 RAG 知识库。当知识库存在对应菜品时，优先调用权威翻译结果；对于未收录菜品，调用大模型进行补充翻译，并通过预设提示词约束输出风格。',
+    ],
+  },
+  {
+    title: '遇到的第二个问题：如何识别美国市场关注的过敏原？',
+    paragraphs: [
+      '美国消费者对于食品过敏问题高度敏感，如果遗漏相关信息，可能直接影响用户体验。',
+      '相比开放式推理，过敏原识别更适合采用标准化知识体系，因为过敏原种类相对固定，不需要模型自由发挥。',
+      '我整理美国食品行业重点关注的过敏原资料，建立过敏原知识库，覆盖 Milk、Egg、Fish、Shellfish、Peanut、Tree Nut、Wheat、Soy、Sesame 等常见风险原料。',
+    ],
+  },
+  {
+    title: '遇到的第三个问题：如何生成符合美国市场的营销文案？',
+    paragraphs: [
+      '很多华人餐厅老板习惯从原料、做法和工艺介绍菜品，但美国消费者更容易被场景、体验和情绪价值打动。',
+      '因此营销文案不应该仅描述菜品，而应该帮助用户理解为什么值得尝试这道菜。',
+      '我结合菜品信息、翻译结果和美国市场表达习惯，自动生成菜品卖点、社交媒体标题、TikTok 文案和 Instagram 文案，帮助餐厅老板从产品视角转向用户视角。',
+    ],
+  },
+  {
+    title: '遇到的第四个问题：如何设计适合华人老板使用的界面？',
+    paragraphs: [
+      '功能逐渐增加后，我发现很多餐厅老板并不熟悉复杂软件。如果界面过于技术化，学习成本会很高。',
+      '中文模式采用双栏结构：左侧展示全部中文内容，方便老板理解；右侧标题为中文，具体内容直接输出英文，方便复制到菜单、网站或社交媒体。',
+      '英文模式则全部内容采用英文输出，适用于直接面向海外团队协作场景。',
+    ],
+  },
+  {
+    title: '覆盖内容',
+    items: ['菜单翻译', '过敏原识别', '菜品卖点', '社交媒体标题', 'TikTok 文案', 'Instagram 文案', '中英双语输出'],
+  },
 ];
 
 const content: Record<Language, Content> = {
@@ -243,13 +497,7 @@ const content: Record<Language, Content> = {
         tags: ['AI Product', 'Agent Workflow', 'RAG', 'TikTok Marketing'],
         img: viralgenInputImage,
         gallery: viralgenGallery,
-        sections: [
-          { title: '项目背景', paragraphs: ['在研究 TikTok 香氛赛道时，我发现很多卖家的问题并不是不会写文案，而是不知道产品卖点、用户购买动机、不同国家用户关注点和内容组织方式。', '因此我开始思考，是否能够通过 AI 帮助卖家完成从产品分析到营销方案生成的完整流程。'] },
-          { title: '关键挑战', paragraphs: ['输入越详细，结果越准确；输入越复杂，用户越容易放弃。产品需要在准确性和使用门槛之间找到平衡。', '1688 信息获取存在反爬限制，RAG 知识会过时，国内产品信息也不等于海外用户需求。'] },
-          { title: '解决方案', paragraphs: ['以商品链接作为入口，通过 Skill 模块结构化提取产品名称、卖点、规格、图片和描述。', '设计香氛行业 RAG 知识库，并结合 Search API 获取实时趋势；引入亚马逊同类产品评论，反向提取真实购买原因。', '参考成熟视频生成 Agent 的脚本结构与分镜逻辑，通过 Codex 拆解重构后融入脚本生成模块。'] },
-          { title: '技术实现', items: ['Python', 'Streamlit', 'Gemini', 'Tavily Search', 'RAG', 'Multimodal Recognition'] },
-          { title: '项目收获', paragraphs: ['AI 产品最大的挑战并不是调用模型，而是把模糊需求拆解成一系列可验证的问题，然后逐个解决。'] },
-        ],
+        sections: viralgenZhSections,
       },
       {
         title: '八字命理 Agent',
@@ -258,13 +506,7 @@ const content: Record<Language, Content> = {
         tags: ['AI Agent', 'Product Thinking', 'FastAPI', 'User Validation'],
         img: baziChartImage,
         gallery: baziGallery,
-        sections: [
-          { title: '项目背景', paragraphs: ['测试多个大模型后发现，对于同一个八字，GPT、DeepSeek、豆包等模型经常给出不同判断。传统命理产品也缺少验证机制。'] },
-          { title: '我的思考', paragraphs: ['最开始我考虑过直接设计性格问卷，但这类问题高度依赖用户主观判断。', '于是我开始思考：过去真实发生的人生事件，是否比主观性格判断更可信？'] },
-          { title: '解决方案', paragraphs: ['将验证机制从性格判断转向人生事件验证，设计流年锚点问答系统。', '通过用户回顾重要年份中的工作、感情、财富和人生转折事件，反向辅助判断喜忌。'] },
-          { title: '技术实现', items: ['Python', 'FastAPI', '真太阳时换算', '四柱排盘', '城市经纬度数据库'] },
-          { title: '我的收获', paragraphs: ['用户相信的不是算法本身，而是验证过程。产品价值不仅来自结果，也来自结果如何被验证。'] },
-        ],
+        sections: baziZhSections,
       },
       {
         title: '美国华人餐饮创业账号',
@@ -273,13 +515,7 @@ const content: Record<Language, Content> = {
         tags: ['Content Growth', 'User Research', 'AI Workflow', 'Market Validation'],
         img: restaurantProfileImage,
         gallery: restaurantGallery,
-        sections: [
-          { title: '项目背景', paragraphs: ['在美国外企 SaaS 工作期间，我发现公司官方账号增长速度较慢。于是我开始思考：如果我是美国华人餐厅老板，我真正愿意关注什么内容？'] },
-          { title: '用户研究', paragraphs: ['利用 Google Deep Research 和 Reddit API 收集美国华人餐厅老板的真实讨论内容，分析经营难题、成本压力、员工管理、餐厅租约、创业经验和市场变化。', '随后用 Grok、Perplexity、Claude 交叉验证结论并要求提供信息来源，尽可能降低幻觉影响。'] },
-          { title: '内容工作流', paragraphs: ['Gemini 负责选题生成和内容初稿，Claude 负责信息验证、内容优化和逻辑调整，AI 视频工具负责自动生成视频。'] },
-          { title: '项目结果', items: ['1500+ 精准粉丝', '4400+ 点赞与收藏', '目标用户：美国华人餐饮创业群体'] },
-          { title: '我的收获', paragraphs: ['增长的核心不是内容生产，而是理解用户。内容增长本质上也是一种用户研究。'] },
-        ],
+        sections: restaurantZhSections,
       },
       {
         title: '菜单过敏检查 Agent',
@@ -288,13 +524,7 @@ const content: Record<Language, Content> = {
         tags: ['AI Agent', 'Food Safety', 'RAG', 'User Experience'],
         img: menuHeroImage,
         gallery: menuGallery,
-        sections: [
-          { title: '项目背景', paragraphs: ['北美华人餐厅老板不仅需要将菜单翻译成英文，还需要解决美国消费者能理解的表达、过敏原识别、社交媒体文案和菜品宣传标题。'] },
-          { title: '菜单翻译', paragraphs: ['真正优秀的菜单翻译不是字面转换，而是在中国菜品文化和美国消费者理解习惯之间取得平衡。', '我将《中国菜标准翻译资料库》整理为 RAG 知识库，已收录菜品优先调用权威翻译，未收录菜品由大模型补充并用提示词约束风格。'] },
-          { title: '过敏原识别', paragraphs: ['美国消费者对食品过敏高度敏感，因此我整理美国食品行业重点关注的过敏原资料，建立标准化知识库。'] },
-          { title: '界面设计', paragraphs: ['中文模式采用双栏结构：左侧展示中文内容，右侧输出可直接复制到菜单、网站或社交媒体的英文内容；英文模式适用于海外团队协作。'] },
-          { title: '覆盖内容', items: ['Menu Translation', 'Allergen Detection', 'TikTok Copy', 'Instagram Copy', 'Bilingual Output'] },
-        ],
+        sections: menuZhSections,
       },
     ],
     skills: {
@@ -471,6 +701,7 @@ export default function App() {
   const [isTreatActive, setIsTreatActive] = useState(false);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const treatTimerRef = useRef<number | null>(null);
   const current = content[language];
   const selectedProject = selectedProjectIndex === null ? null : current.projects[selectedProjectIndex];
   const emailAddress = 'sunxiaoyun333@gmail.com';
@@ -501,6 +732,21 @@ export default function App() {
     setSelectedProjectIndex(null);
     setSelectedImage(null);
   }, [language]);
+
+  useEffect(() => {
+    return () => {
+      if (treatTimerRef.current) window.clearTimeout(treatTimerRef.current);
+    };
+  }, []);
+
+  const handleAvatarClick = () => {
+    if (treatTimerRef.current) window.clearTimeout(treatTimerRef.current);
+    setIsTreatActive(true);
+    treatTimerRef.current = window.setTimeout(() => {
+      setIsTreatActive(false);
+      treatTimerRef.current = null;
+    }, 5000);
+  };
 
   const navItems = [
     { id: 'home', icon: <User size={18} /> },
@@ -580,10 +826,7 @@ export default function App() {
             <motion.button
               type="button"
               aria-label={current.hero.treat}
-              onClick={() => {
-                setIsTreatActive(true);
-                window.setTimeout(() => setIsTreatActive(false), 4500);
-              }}
+              onClick={handleAvatarClick}
               whileTap={{ scale: 0.96 }}
               className="relative z-10 h-64 w-64 cursor-pointer overflow-hidden rounded-full border-8 border-white/80 bg-transparent p-0 shadow-2xl md:h-80 md:w-80"
             >
@@ -591,14 +834,27 @@ export default function App() {
             </motion.button>
             <AnimatePresence>
               {isTreatActive && (
-                <motion.div
-                  initial={{ opacity: 0, y: 14, scale: 0.9 }}
-                  animate={{ opacity: 1, y: [0, -6, 0], scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.94 }}
-                  className="absolute -top-20 left-1/2 z-30 w-64 -translate-x-1/2 rounded-[1.75rem] border border-white/60 bg-teal-500/75 px-6 py-4 text-center shadow-2xl shadow-teal-300/30 backdrop-blur-xl"
-                >
-                  <p className="text-sm font-black leading-relaxed text-emerald-50 md:text-base">{current.hero.treat}</p>
-                </motion.div>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, y: 14, scale: 0.9 }}
+                    animate={{ opacity: 1, y: [0, -6, 0], scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.94 }}
+                    transition={{ opacity: { duration: 0.25 }, scale: { duration: 0.25 }, y: { duration: 1.8, repeat: Infinity, ease: 'easeInOut' } }}
+                    className="absolute -top-20 left-1/2 z-30 w-64 -translate-x-1/2 rounded-[1.75rem] border border-white/60 bg-teal-500/75 px-6 py-4 text-center shadow-2xl shadow-teal-300/30 backdrop-blur-xl md:-top-24"
+                  >
+                    <div className="absolute -bottom-2 left-1/2 h-5 w-5 -translate-x-1/2 rotate-45 border-b border-r border-white/60 bg-teal-500/75" />
+                    <p className="relative text-sm font-black leading-relaxed text-emerald-50 md:text-base">{current.hero.treat}</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 24, scale: 0.78, rotate: -6 }}
+                    animate={{ opacity: 1, y: [0, -5, 0], scale: 1, rotate: 0 }}
+                    exit={{ opacity: 0, y: 18, scale: 0.82 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+                    className="absolute -bottom-16 left-1/2 z-30 h-36 w-48 -translate-x-1/2 rounded-full bg-white/20 p-2 backdrop-blur-[1px] md:-bottom-14 md:h-40 md:w-56"
+                  >
+                    <MilkTeaHands />
+                  </motion.div>
+                </>
               )}
             </AnimatePresence>
             <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity }} className="absolute -right-4 -top-4 z-20 rounded-2xl border border-white bg-white/80 p-4 shadow-xl backdrop-blur-md">
