@@ -20,6 +20,7 @@ import menuWorkflowImage from './assets/menu-workflow.png';
 import menuResultInfoImage from './assets/menu-result-info.png';
 import menuAllergenMarketingImage from './assets/menu-allergen-marketing.png';
 import menuCopyOutputImage from './assets/menu-copy-output.png';
+import KnowledgeGraph from './KnowledgeGraph';
 import {
   Award,
   Briefcase,
@@ -600,26 +601,7 @@ export default function App() {
           </motion.div>
         </section>
 
-        <section id="mind-graph" className="mb-40 scroll-mt-32">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
-            <p className="mb-3 text-sm font-black uppercase tracking-[0.2em] text-teal-500">{current.mind.eyebrow}</p>
-            <h2 className="mb-5 text-4xl font-black tracking-tight text-slate-900 md:text-5xl">{current.mind.title}</h2>
-            <p className="max-w-2xl text-lg font-bold leading-relaxed text-slate-500">{current.mind.subtitle}</p>
-          </motion.div>
-          <div className="grid gap-5 md:grid-cols-2">
-            {current.mind.cards.map((card) => (
-              <div key={card.title}>
-                <GlassCard className="h-full">
-                  <h3 className="mb-3 text-2xl font-black text-slate-900">{card.title}</h3>
-                  <p className="mb-5 font-bold leading-relaxed text-slate-600">{card.body}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {card.tags.map((tag) => <span key={tag} className="rounded-lg bg-teal-50 px-3 py-1 text-xs font-black text-teal-700">{tag}</span>)}
-                  </div>
-                </GlassCard>
-              </div>
-            ))}
-          </div>
-        </section>
+        <KnowledgeGraph />
 
         <section id="experience" className="mb-40 scroll-mt-32">
           <SectionHeading icon="☀️">{current.experience.title}</SectionHeading>
