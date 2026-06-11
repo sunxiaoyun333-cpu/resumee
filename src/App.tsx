@@ -821,7 +821,16 @@ export default function App() {
           </div>
 
           <motion.div initial={{ opacity: 0, scale: 0.85, rotate: -8 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} transition={{ duration: 1, type: 'spring' }} className="relative">
-            <div className="absolute -inset-4 rounded-full border-4 border-emerald-400/40" />
+            <div className="avatar-orbit-glow" />
+            <div className="avatar-ripple" />
+            <div className="avatar-ripple" />
+            <div className="avatar-ripple" />
+            <motion.div
+              aria-hidden="true"
+              animate={{ scale: [1, 1.025, 1], opacity: [0.62, 0.9, 0.62] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute -inset-4 rounded-full border-4 border-emerald-300/55 shadow-[0_0_42px_rgba(20,184,166,0.25)]"
+            />
             <div className="absolute inset-0 rounded-full bg-emerald-300/30 blur-3xl" />
             <motion.button
               type="button"
