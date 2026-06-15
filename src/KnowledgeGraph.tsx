@@ -34,8 +34,182 @@ type GraphLink = {
   group: string;
 };
 
+type Language = 'zh' | 'en';
+
 const WIDTH = 1480;
 const HEIGHT = 760;
+
+const graphCopy: Record<Language, {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  hint: string;
+  ariaLabel: string;
+  currentNode: string;
+  tags: string;
+  philosophy: string;
+  emptyDetails: string;
+}> = {
+  zh: {
+    eyebrow: '核心知识图谱',
+    title: '探索我的思维图谱',
+    subtitle: '比起告诉你我做过什么，我更希望展示我是如何思考的。',
+    hint: '拖拽节点 · 滚轮缩放 · 点击探索',
+    ariaLabel: '孙晓云的核心知识图谱',
+    currentNode: '当前节点',
+    tags: '核心标签',
+    philosophy: '核心理念',
+    emptyDetails: '点击图谱节点查看具体内容',
+  },
+  en: {
+    eyebrow: 'Core Knowledge Graph',
+    title: 'Explore My Thinking Map',
+    subtitle: 'Rather than only showing what I have done, I want to show how I think.',
+    hint: 'Drag nodes · Scroll to zoom · Click to explore',
+    ariaLabel: 'Sun Xiaoyun core knowledge graph',
+    currentNode: 'Current Node',
+    tags: 'Core Tags',
+    philosophy: 'Core Principles',
+    emptyDetails: 'Click a graph node to view details',
+  },
+};
+
+const graphNodeEnglishOverrides: Record<string, Partial<GraphNode>> = {
+  sunxiaoyun: {
+    label: 'Sun Xiaoyun',
+    subtitle: 'AI Product Candidate',
+    detailTitle: 'Sun Xiaoyun',
+    tags: ['TEM-8 English', 'Overseas SaaS', 'AI Product Practice', 'Product Thinking'],
+    details: ['My goal is not only to show what I know, but to make it clear how I turn real user needs into AI product ideas.'],
+    philosophy: [
+      'TEM-8 English gives me a cross-cultural communication foundation.',
+      'Overseas SaaS experience keeps me close to real users.',
+      'AI project practice helps me turn ideas into working prototypes.',
+      'Product thinking keeps me focused on user value first.',
+    ],
+  },
+  about: {
+    label: 'About Me',
+    detailTitle: 'About Me',
+    details: ['English major', 'TEM-8 certified', 'Overseas SaaS operations experience', 'AI product practitioner'],
+  },
+  work: {
+    label: 'Experience',
+    detailTitle: 'Work Experience',
+    details: ['Overseas SaaS operations', 'Customer communication', 'Requirement feedback analysis', 'Cross-cultural collaboration'],
+  },
+  projects: {
+    label: 'Projects',
+    detailTitle: 'Project Experience',
+    details: ['AI marketing workbench', 'Menu allergy check Agent', 'Bazi Agent'],
+  },
+  abilities: {
+    label: 'Core Skills',
+    detailTitle: 'Core Skills',
+    details: ['English communication', 'User insight', 'AI product practice', 'AI workflow design', 'Content growth', 'Global perspective'],
+  },
+  thinking: {
+    label: 'Thinking',
+    detailTitle: 'Product Thinking',
+    details: ['Why AI product', 'Users do not directly state needs', 'Product management in the AI era', 'Product = hypothesis + validation'],
+  },
+  'saas-ops': {
+    label: 'Overseas SaaS',
+    detailTitle: 'Overseas SaaS Operations',
+    details: ['Handled overseas customer communication and requirement feedback.', 'Learned to understand business scenarios from the customer perspective.'],
+  },
+  'customer-communication': {
+    label: 'Customer Communication',
+    detailTitle: 'Overseas Customer Communication',
+    details: ['Used my English background and TEM-8 training to communicate clearly and steadily with overseas customers.'],
+  },
+  'feedback-analysis': {
+    label: 'Feedback Analysis',
+    detailTitle: 'Requirement Feedback Analysis',
+    details: ['Identified real needs, business blockers, and product improvement opportunities from customer feedback.'],
+  },
+  'cross-culture': {
+    label: 'Cross-Cultural Work',
+    detailTitle: 'Cross-Cultural Collaboration',
+    details: ['Understood user expression across different markets and communication contexts, reducing collaboration cost.'],
+  },
+  'allergy-agent': {
+    label: 'Menu Allergy Agent',
+    detailTitle: 'Menu Allergy Check Agent',
+    details: ['Designed for Chinese restaurants in North America.', 'Uses AI to identify menu content and potential allergen risks.'],
+  },
+  'ai-marketing-tool': {
+    label: 'AI Marketing Tool',
+    detailTitle: 'ViralGen: TikTok Fragrance AI Marketing Workbench',
+    details: [
+      'Problem: cross-border sellers understand their products, but struggle to produce TikTok-style marketing content consistently.',
+      'The workflow needs product analysis, user pain point research, competitor research, creative direction, and video script generation.',
+      'Solution: built an AI marketing workflow using Python, Streamlit, LLMs, multimodal recognition, Tavily Search, and a fragrance RAG knowledge base.',
+      'Product design: decomposed the marketing process into product analysis, user insight, competitor research, style generation, scene generation, and prompt generation modules.',
+    ],
+  },
+  'bazi-agent': {
+    label: 'Bazi Agent',
+    detailTitle: 'Bazi Agent',
+    details: [
+      'Problem: different LLMs often give different conclusions for the same chart, making trust difficult.',
+      'Thinking: real life events may be more useful than abstract personality questions for validation.',
+      'Solution: built a FastAPI + Python Agent supporting chart calculation, true solar time conversion, luck-cycle analysis, and streamed reports.',
+      'Product innovation: designed a year-anchor Q&A system to validate judgments through user life-event feedback.',
+      'Takeaway: users trust not only algorithms, but whether the result can connect with their lived experience.',
+    ],
+  },
+  'english-communication': {
+    label: 'English Communication',
+    detailTitle: 'English Communication',
+    details: ['TEM-8 certified', 'Fluent English communication', 'Cross-cultural collaboration', 'Overseas customer interaction'],
+  },
+  'user-research': {
+    label: 'User Insight',
+    detailTitle: 'User Insight',
+    details: ['Worked closely with overseas restaurant customers.', 'Learned to understand needs through who the user is, what problem they face, and why the problem happens.', 'Turned feedback into product hypotheses and validation directions.'],
+  },
+  'ai-workflow': {
+    label: 'AI Workflow',
+    detailTitle: 'AI Workflow Design',
+    details: ['Comfortable using Codex, Claude Code, and OpenClaw.', 'Can break complex business processes into Agents, Skills, and Workflows.', 'Uses AI automation to improve product design, content production, and business execution.'],
+  },
+  'ai-product-practice': {
+    label: 'AI Product Practice',
+    detailTitle: 'AI Product Practice',
+    details: ['Used AI to complete requirement analysis, product design, prototype development, and product validation.', 'Continuously explores building AI products from 0 to 1.'],
+  },
+  'content-growth': {
+    label: 'Content Growth',
+    detailTitle: 'Content Growth Practice',
+    details: ['Ran a U.S. Chinese restaurant entrepreneurship content account.', 'Used AI for topic research, content production, and data review.', 'Grew to 1,500+ targeted followers and 4,400+ likes and saves.', 'Used content data to validate user interests and needs.'],
+  },
+  'global-perspective': {
+    label: 'Global Perspective',
+    detailTitle: 'Global Perspective',
+    details: ['Long-term focus on the U.S. restaurant market, overseas SaaS, TikTok ecosystems, and cross-border commerce.', 'Continuously studies differences in user behavior across markets.'],
+  },
+  'mvp-thinking': {
+    label: 'Hypothesis + Validation',
+    detailTitle: 'Product = Hypothesis + Validation',
+    details: ['Whether building an AI marketing tool or a Bazi Agent, I keep asking: does this user problem really exist, and can we validate it?', 'This is how I understand the essence of product work.'],
+  },
+  'user-value': {
+    label: 'Hidden User Needs',
+    detailTitle: 'Users Do Not Directly State Needs',
+    details: ['Users express problems, but product managers need to identify the deeper reasons behind them.', 'Real needs are often hidden in behavior, feedback, and data.'],
+  },
+  'why-ai-pm': {
+    label: 'Why AI Product',
+    detailTitle: 'Why I Choose AI Product',
+    details: ['Overseas operations experience kept me close to real user needs.', 'AI gave me the ability to go from idea to working product prototype.', 'Through multiple projects, I confirmed AI product as my long-term direction.'],
+  },
+  'ai-pm-era': {
+    label: 'AI Product Era',
+    detailTitle: 'Product Managers in the AI Era',
+    details: ['AI is lowering the threshold for product building.', 'Future product managers need to understand both users and the capability boundaries of AI.', 'I want to become the person who connects the two.'],
+  },
+};
 
 const graphNodes: GraphNode[] = [
   {
@@ -286,7 +460,15 @@ const getPoint = (svg: SVGSVGElement, event: React.PointerEvent<SVGCircleElement
   return { x: raw.x / zoom, y: raw.y / zoom };
 };
 
-export default function KnowledgeGraph() {
+const getLocalizedGraphNodes = (language: Language): GraphNode[] => {
+  if (language === 'zh') return graphNodes;
+  return graphNodes.map((node) => ({
+    ...node,
+    ...graphNodeEnglishOverrides[node.id],
+  }));
+};
+
+export default function KnowledgeGraph({ language = 'zh' }: { language?: Language }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const simulationRef = useRef<Simulation<SimNode, GraphLink> | null>(null);
   const scatterTimerRef = useRef<number | null>(null);
@@ -294,9 +476,11 @@ export default function KnowledgeGraph() {
   const [selectedId, setSelectedId] = useState('sunxiaoyun');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1.22);
-  const selectedNode = nodes.find((node) => node.id === selectedId) ?? graphNodes[0];
+  const localizedGraphNodes = useMemo(() => getLocalizedGraphNodes(language), [language]);
+  const copy = graphCopy[language];
+  const selectedNode = nodes.find((node) => node.id === selectedId) ?? localizedGraphNodes[0];
 
-  const links = useMemo(() => graphLinks.map((link) => ({ ...link })), []);
+  const links = useMemo(() => graphLinks.map((link) => ({ ...link })), [language]);
   const focusId = hoveredId || selectedId;
 
   const connectedIds = useMemo(() => {
@@ -311,7 +495,7 @@ export default function KnowledgeGraph() {
   }, [focusId, links]);
 
   useEffect(() => {
-    const simNodes: SimNode[] = graphNodes.map((node, index) => ({
+    const simNodes: SimNode[] = localizedGraphNodes.map((node, index) => ({
       ...node,
       x: WIDTH / 2 + Math.cos(index * 1.7) * 145,
       y: HEIGHT / 2 + Math.sin(index * 1.7) * 145,
@@ -352,7 +536,7 @@ export default function KnowledgeGraph() {
     return () => {
       simulation.stop();
     };
-  }, [links]);
+  }, [links, localizedGraphNodes]);
 
   useEffect(() => {
     return () => {
@@ -418,12 +602,12 @@ export default function KnowledgeGraph() {
             <Brain className="text-teal-600" size={26} />
           </div>
           <div>
-            <p className="text-sm font-black tracking-[0.2em] uppercase text-teal-500 mb-2">核心知识图谱</p>
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">探索我的思维图谱</h2>
+            <p className="text-sm font-black tracking-[0.2em] uppercase text-teal-500 mb-2">{copy.eyebrow}</p>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">{copy.title}</h2>
           </div>
         </div>
         <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl">
-          比起告诉你我做过什么，我更希望展示我是如何思考的
+          {copy.subtitle}
         </p>
       </motion.div>
 
@@ -444,14 +628,14 @@ export default function KnowledgeGraph() {
               </button>
             </div>
                 <div className="absolute bottom-4 left-4 z-20 rounded-xl border border-white/70 bg-white/65 px-4 py-2 text-xs font-black text-slate-500 shadow-sm backdrop-blur-md">
-                  拖拽节点 · 滚轮缩放 · 点击探索
+                  {copy.hint}
                 </div>
             <svg
               ref={svgRef}
               viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
               className="relative z-10 h-[720px] w-full touch-none"
               role="img"
-              aria-label="孙晓云的核心知识图谱"
+              aria-label={copy.ariaLabel}
               onWheel={(event) => {
                 event.preventDefault();
                 changeZoom(zoom + (event.deltaY > 0 ? -0.05 : 0.05));
@@ -556,7 +740,7 @@ export default function KnowledgeGraph() {
           >
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
-                <p className="mb-2 text-xs font-black tracking-[0.2em] uppercase text-teal-500">当前节点</p>
+                <p className="mb-2 text-xs font-black tracking-[0.2em] uppercase text-teal-500">{copy.currentNode}</p>
                 <h3 className="text-2xl font-black text-slate-900">{selectedNode.detailTitle ?? selectedNode.label}</h3>
                 {selectedNode.subtitle && <p className="mt-2 text-sm font-bold text-slate-400">{selectedNode.subtitle}</p>}
               </div>
@@ -567,7 +751,7 @@ export default function KnowledgeGraph() {
 
             {selectedNode.tags && (
               <div className="mb-6">
-                <p className="mb-3 text-xs font-black tracking-[0.16em] uppercase text-slate-400">核心标签</p>
+                <p className="mb-3 text-xs font-black tracking-[0.16em] uppercase text-slate-400">{copy.tags}</p>
                 <div className="flex flex-wrap gap-2">
                   {selectedNode.tags.map((tag) => (
                     <span key={tag} className="rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-600">
@@ -579,7 +763,7 @@ export default function KnowledgeGraph() {
             )}
 
             <div className="space-y-3">
-              {(selectedNode.details ?? ['点击图谱节点查看具体内容']).map((item) => (
+              {(selectedNode.details ?? [copy.emptyDetails]).map((item) => (
                 <div key={item} className="rounded-xl border border-white/70 bg-white/60 px-4 py-3 text-sm font-bold leading-relaxed text-slate-600 shadow-sm">
                   {item}
                 </div>
@@ -588,7 +772,7 @@ export default function KnowledgeGraph() {
 
             {selectedNode.philosophy && (
               <div className="mt-6">
-                <p className="mb-3 text-xs font-black tracking-[0.16em] uppercase text-slate-400">核心理念</p>
+                <p className="mb-3 text-xs font-black tracking-[0.16em] uppercase text-slate-400">{copy.philosophy}</p>
                 <div className="space-y-3">
                   {selectedNode.philosophy.map((item) => (
                     <div key={item} className="rounded-xl border border-teal-100 bg-teal-50/80 px-4 py-3 text-sm font-black leading-relaxed text-teal-700">

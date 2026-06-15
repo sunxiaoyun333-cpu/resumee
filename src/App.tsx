@@ -871,7 +871,7 @@ export default function App() {
           </motion.div>
         </section>
 
-        <KnowledgeGraph />
+        <KnowledgeGraph language={language} />
 
         <section id="experience" className="mb-40 scroll-mt-32">
           <SectionHeading icon="☀️">{current.experience.title}</SectionHeading>
