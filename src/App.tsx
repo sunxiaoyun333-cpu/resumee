@@ -798,8 +798,8 @@ export default function App() {
                 <Languages size={17} />
                 {language === 'zh' ? 'EN' : '中文'}
               </button>
-              <motion.a whileHover={{ scale: 1.1 }} href="https://github.com/sunxiaoyun333-cpu/resumee" className="p-2 text-slate-500 transition-colors hover:text-teal-600"><Github size={22} /></motion.a>
-              <motion.a whileHover={{ scale: 1.1 }} href="#" className="p-2 text-slate-500 transition-colors hover:text-teal-600"><Linkedin size={22} /></motion.a>
+              <motion.a whileHover={{ scale: 1.1 }} href="https://github.com/sunxiaoyun333-cpu/resumee" target="_blank" rel="noreferrer" aria-label="GitHub" className="p-2 text-slate-500 transition-colors hover:text-teal-600"><Github size={22} /></motion.a>
+              <motion.a whileHover={{ scale: 1.1 }} href="https://www.linkedin.com/in/xiaoyun-sun-7a7914382" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="p-2 text-slate-500 transition-colors hover:text-teal-600"><Linkedin size={22} /></motion.a>
             </div>
           </div>
         </div>
